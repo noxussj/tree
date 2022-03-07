@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-uiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="./src/styles/tree.css" />
+    </head>
+    <body>
+        <div class="app"></div>
+    </body>
+    <script src="./src/utils/tree.js"></script>
+    <script>
+        const data = [
+            {
+                label: 'node-1',
+                children: [
+                    {
+                        label: 'node-1-1',
+                    },
+                ],
+            },
+            {
+                label: 'node-2',
+                children: [
+                    {
+                        label: 'node-2-1',
+                        children: [
+                            {
+                                label: 'node-2-1-1',
+                            },
+                        ],
+                    },
+                    {
+                        label: 'node-2-2',
+                        children: [
+                            {
+                                label: 'node-2-2-1',
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                label: 'node-3',
+                children: [
+                    {
+                        label: 'node-3-1',
+                        children: [
+                            {
+                                label: 'node-3-1-1',
+                            },
+                        ],
+                    },
+                    {
+                        label: 'node-3-2',
+                        children: [
+                            {
+                                label: 'node-3-2-1',
+                            },
+                        ],
+                    },
+                ],
+            },
+        ];
+
+        const tree = new Tree(document.querySelector('.app'));
+
+        tree.render(data);
+    </script>
+</html>

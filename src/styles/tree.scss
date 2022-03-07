@@ -1,0 +1,39 @@
+.tree {
+    font-size: 14px;
+
+    i,
+    span {
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .icon-arrow {
+        margin-right: 6px;
+        width: 10px;
+        height: 10px;
+        background: url('../assets/icon-arrow.svg');
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: 160%;
+    }
+
+    .tree__item {
+        height: 26px;
+        display: flex;
+        align-items: center;
+
+        span {
+            line-height: 14px;
+            color: #666;
+        }
+    }
+
+    .tree__item:hover {
+        cursor: pointer;
+        background-color: #f5f7fa;
+    }
+
+    .is-expanded {
+        // display: block;
+    }
+}
