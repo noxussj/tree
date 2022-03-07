@@ -23,18 +23,25 @@ class Tree {
         node.innerHTML = `<i class="icon-arrow"></i><span>${root.label}</span>`;
         node.onclick = () => {
             // 收起
-            if (node.getAttribute('expanded') === 'true') {
-                node.setAttribute('expanded', 'false');
-                const elements = document.querySelectorAll(`*[parentid='${node.id}']`);
+            if (node.getAttribute('expand') === 'true') {
+                node.setAttribute('expand', 'false');
 
-                elements.forEach((x) => {
-                    this.dom.removeChild(x);
-                });
+                const dfs = (id) => {
+                    const elements = document.querySelectorAll(`*[parentid='${id}']`);
+
+                    elements.forEach((x) => {
+                        this.dom.removeChild(x);
+
+                        dfs(x.id);
+                    });
+                };
+
+                dfs(node.id);
             }
 
             // 展开
             else {
-                node.setAttribute('expanded', 'true');
+                node.setAttribute('expand', 'true');
                 (root.children || []).forEach((x) => {
                     const child = this.node(x, level + 1);
                     child.setAttribute('parentid', node.id);
