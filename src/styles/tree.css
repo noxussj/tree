@@ -21,6 +21,7 @@
   background-size: 160%;
 }
 .tree .tree__item span {
+  margin-left: 3px;
   line-height: 14px;
   color: #666;
 }

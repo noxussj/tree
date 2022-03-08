@@ -20,7 +20,7 @@ class Tree {
         node.style.paddingLeft = this.indent * (level - 1) + 'px';
         node.setAttribute('id', (Math.random() * 1).toFixed(5));
         node.className = 'tree__item';
-        node.innerHTML = `<i class="icon-arrow"></i><span>${root.label}</span>`;
+        node.innerHTML = `<i class="icon-arrow"></i><input type="checkbox" /><span>${root.label}</span>`;
         node.onclick = () => {
             // 收起
             if (node.getAttribute('expand') === 'true') {
