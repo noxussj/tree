@@ -32,6 +32,23 @@ class Tree {
     }
 
     /**
+     * 选中节点
+     */
+    selected(dom, checked, root) {
+        dom.checked = checked;
+
+        checked ? this.checked.add(root.id) : this.checked.delete(root.id);
+
+        (root.children || []).forEach((x) => {
+            const section = document.querySelector('#tree-' + x.id);
+
+            if (section) {
+                this.selected(section.querySelector('input'), checked, x);
+            }
+        });
+    }
+
+    /**
      * 渲染
      */
     render(data) {
@@ -48,7 +65,7 @@ class Tree {
 
                     root.children.forEach((x) => {
                         child.push(
-                            h('section', { on: { click: click(x) } }, [
+                            h('section', { props: { id: 'tree-' + x.id }, on: { click: click(x) } }, [
                                 h('div.section__item', [
                                     x.children && x.children.length ? h('i.icon-arrow') : h('i.icon-arrow.none'),
                                     h('input', {
@@ -57,11 +74,7 @@ class Tree {
                                             click: (e) => {
                                                 e.stopPropagation();
 
-                                                if (this.checked.has(x.id)) {
-                                                    this.checked.delete(x.id);
-                                                } else {
-                                                    this.checked.add(x.id);
-                                                }
+                                                this.selected(e.target, e.target.checked, x);
                                             },
                                         },
                                     }),
@@ -90,7 +103,7 @@ class Tree {
 
         data.forEach((root) => {
             vnode.push(
-                h('section', { on: { click: click(root) } }, [
+                h('section', { props: { id: 'tree-' + root.id }, on: { click: click(root) } }, [
                     h('div.section__item', [
                         h('i.icon-arrow'),
                         h('input', {
@@ -99,11 +112,7 @@ class Tree {
                                 click: (e) => {
                                     e.stopPropagation();
 
-                                    if (this.checked.has(root.id)) {
-                                        this.checked.delete(root.id);
-                                    } else {
-                                        this.checked.add(root.id);
-                                    }
+                                    this.selected(e.target, e.target.checked, root);
                                 },
                             },
                         }),
