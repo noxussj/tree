@@ -15,6 +15,8 @@ class Tree {
     constructor(dom) {
         this.indent = 16;
 
+        this.checked = new Set();
+
         this.createRootDom(dom);
     }
 
@@ -37,7 +39,7 @@ class Tree {
          * 渲染子节点
          */
         const click = (root) => {
-            return function (e) {
+            return (e) => {
                 e.stopPropagation();
                 const needExpand = root.children && root.children.length && !e.currentTarget.querySelector('.section__subitem').children.length;
 
@@ -49,7 +51,20 @@ class Tree {
                             h('section', { on: { click: click(x) } }, [
                                 h('div.section__item', [
                                     x.children && x.children.length ? h('i.icon-arrow') : h('i.icon-arrow.none'),
-                                    h('input', { props: { type: 'checkbox' } }),
+                                    h('input', {
+                                        props: { type: 'checkbox' },
+                                        on: {
+                                            click: (e) => {
+                                                e.stopPropagation();
+
+                                                if (this.checked.has(x.id)) {
+                                                    this.checked.delete(x.id);
+                                                } else {
+                                                    this.checked.add(x.id);
+                                                }
+                                            },
+                                        },
+                                    }),
                                     h('span', x.label),
                                 ]),
                                 h('div.section__subitem'),
@@ -76,7 +91,24 @@ class Tree {
         data.forEach((root) => {
             vnode.push(
                 h('section', { on: { click: click(root) } }, [
-                    h('div.section__item', [h('i.icon-arrow'), h('input', { props: { type: 'checkbox' } }), h('span', root.label)]),
+                    h('div.section__item', [
+                        h('i.icon-arrow'),
+                        h('input', {
+                            props: { type: 'checkbox' },
+                            on: {
+                                click: (e) => {
+                                    e.stopPropagation();
+
+                                    if (this.checked.has(root.id)) {
+                                        this.checked.delete(root.id);
+                                    } else {
+                                        this.checked.add(root.id);
+                                    }
+                                },
+                            },
+                        }),
+                        h('span', root.label),
+                    ]),
                     h('div.section__subitem'),
                 ])
             );
