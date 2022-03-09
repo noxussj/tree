@@ -11,6 +11,7 @@
         "html-webpack-plugin": "^5.5.0",
         "sass": "^1.49.9",
         "sass-loader": "^12.6.0",
+        "snabbdom": "^3.3.1",
         "style-loader": "^3.3.1",
         "webpack": "^5.70.0",
         "webpack-dev-server": "^4.7.4"

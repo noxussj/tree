@@ -1,3 +1,13 @@
+import { init, classModule, propsModule, styleModule, eventListenersModule, h } from 'snabbdom';
+
+const patch = init([
+    // Init patch function with chosen modules
+    classModule, // makes it easy to toggle classes
+    propsModule, // for setting properties on DOM elements
+    styleModule, // handles styling on elements with support for animations
+    eventListenersModule, // attaches event listeners
+]);
+
 /**
  * 虚拟化树形类
  */
@@ -5,63 +15,74 @@ class Tree {
     constructor(dom) {
         this.indent = 16;
 
-        const elementTree = document.createElement('div');
-        elementTree.className = 'tree';
-        dom.appendChild(elementTree);
-
-        this.dom = document.querySelector('.tree');
+        this.createRootDom(dom);
     }
 
     /**
-     * 获取节点
+     * 创建根节点
      */
-    node(root, level) {
-        const node = document.createElement('div');
-        node.style.paddingLeft = this.indent * (level - 1) + 'px';
-        node.setAttribute('id', (Math.random() * 1).toFixed(5));
-        node.className = 'tree__item';
-        node.innerHTML = `<i class="icon-arrow"></i><input type="checkbox" /><span>${root.label}</span>`;
-        node.onclick = () => {
-            // 收起
-            if (node.getAttribute('expand') === 'true') {
-                node.setAttribute('expand', 'false');
+    createRootDom(dom) {
+        const vnode = h('div.tree');
 
-                const dfs = (id) => {
-                    const elements = document.querySelectorAll(`*[parentid='${id}']`);
+        patch(dom, vnode);
 
-                    elements.forEach((x) => {
-                        this.dom.removeChild(x);
-
-                        dfs(x.id);
-                    });
-                };
-
-                dfs(node.id);
-            }
-
-            // 展开
-            else {
-                node.setAttribute('expand', 'true');
-                (root.children || []).forEach((x) => {
-                    const child = this.node(x, level + 1);
-                    child.setAttribute('parentid', node.id);
-                    this.dom.insertBefore(child, node.nextElementSibling);
-                });
-            }
-        };
-
-        return node;
+        this.container = document.querySelector('.tree');
     }
 
     /**
      * 渲染
      */
     render(data) {
-        data.map((item) => {
-            const node = this.node(item, 1);
+        /**
+         * 渲染子节点
+         */
+        const click = (root) => {
+            return function (e) {
+                e.stopPropagation();
+                const needExpand = root.children && root.children.length && !e.currentTarget.querySelector('.section__subitem').children.length;
 
-            this.dom.appendChild(node);
+                if (needExpand) {
+                    const child = [];
+
+                    root.children.forEach((x) => {
+                        child.push(
+                            h('section', { on: { click: click(x) } }, [
+                                h('div.section__item', [
+                                    x.children && x.children.length ? h('i.icon-arrow') : h('i.icon-arrow.none'),
+                                    h('input', { props: { type: 'checkbox' } }),
+                                    h('span', x.label),
+                                ]),
+                                h('div.section__subitem'),
+                            ])
+                        );
+                    });
+
+                    e.currentTarget.className = 'is-expand';
+
+                    patch(e.currentTarget.querySelector('.section__subitem'), h('div.section__subitem', child));
+                } else {
+                    e.currentTarget.className = '';
+
+                    patch(e.currentTarget.querySelector('.section__subitem'), h('div.section__subitem', ''));
+                }
+            };
+        };
+
+        /**
+         * 渲染首层节点
+         */
+        const vnode = [];
+
+        data.forEach((root) => {
+            vnode.push(
+                h('section', { on: { click: click(root) } }, [
+                    h('div.section__item', [h('i.icon-arrow'), h('input', { props: { type: 'checkbox' } }), h('span', root.label)]),
+                    h('div.section__subitem'),
+                ])
+            );
         });
+
+        patch(this.container, h('div.tree', vnode));
     }
 }
 

@@ -7,37 +7,49 @@
         vertical-align: middle;
     }
 
-    .tree__item {
-        height: 26px;
-        display: flex;
-        align-items: center;
+    section {
+        .section__item {
+            height: 26px;
+            display: flex;
+            align-items: center;
 
-        .icon-arrow {
-            margin-right: 6px;
-            width: 10px;
-            height: 10px;
-            background: url('../assets/icon-arrow.svg');
-            background-repeat: no-repeat;
-            background-position: center center;
-            background-size: 160%;
+            .icon-arrow {
+                margin-right: 6px;
+                width: 8px;
+                height: 8px;
+                background: url('../assets/icon-arrow.svg');
+                background-repeat: no-repeat;
+                background-position: center center;
+                background-size: 160%;
+                transition-duration: 0.2s;
+            }
+
+            .icon-arrow.none {
+                background: none;
+            }
+
+            span {
+                margin-left: 3px;
+                line-height: 14px;
+                color: #666;
+            }
         }
 
+        .section__item:hover {
+            cursor: pointer;
+            background-color: #f5f7fa;
+        }
 
-        span {
-            margin-left: 3px;
-            line-height: 14px;
-            color: #666;
+        section {
+            padding-left: 16px;
         }
     }
 
-    .tree__item:hover {
-        cursor: pointer;
-        background-color: #f5f7fa;
-    }
-
-    .tree__item[expand='true'] {
-        .icon-arrow {
-            transform: rotate(90deg);
+    section.is-expand {
+        > .section__item {
+            .icon-arrow {
+                transform: rotate(90deg);
+            }
         }
     }
 }
